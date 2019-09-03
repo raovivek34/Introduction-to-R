@@ -1,2 +1,4 @@
 # Introduction-to-R
 Covers the basics of R programming language - helpful for learning R.
+Covers initially simple R scripts that cover the basics of R and help in understanding R programming language.
+1. (vector.R) - Covers the topic of scalars and vectors in R programming language.
