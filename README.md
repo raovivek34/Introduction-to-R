@@ -7,5 +7,5 @@ Simple R scripts that cover the basics of R and help in understanding R programm
 4. (data_frame.R) - Covers the topic of datasets and dataframes in R programming language.
 5. Intro_DataViz - Covers the topic of data visualization in R programming language using the Boston Housing dataset.
 6. Intro_Regression - Covers the topic of regression analysis in R programming language using Toyota Corolla Prices dataset - Multiple Linear Regression and Feature Selection Techniques involving Exhaustive Search, Forward Selection, Backward Selection and Stepwise Regression.
-7. 
+7. Intro_LogisticRegression - Covers the topic of classification analysis in R programming language using Logistic Regression on Universal Bank Loan Dataset
 
