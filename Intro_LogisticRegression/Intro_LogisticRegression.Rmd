@@ -1,0 +1,90 @@
+---
+title: "Intro_LogisticRegression"
+output: rmarkdown::github_document
+---
+
+```{r, echo = FALSE}
+knitr::opts_chunk$set(
+  fig.path = "README_figs/README-"
+)
+```
+
+```{r}
+pacman::p_load(caret, data.table, gains, leaps, MASS, tidyverse)
+theme_set(theme_classic())
+```
+
+## Logistic Regression using Universal Bank data
+```{r readData}
+bank.dt <- fread("UniversalBank.csv")
+bank.dt <- bank.dt[ , -c(1,5)]  # Drop ID and zip code columns
+
+names(bank.dt) <- gsub('\\s', '_', names(bank.dt))
+
+# Convert "Education" to categorical variable
+bank.dt$Education <- factor(bank.dt$Education, levels = c(1, 2, 3), 
+                            labels = c("Undergrad", "Graduate", "Adv/Prof"))
+bank.df <- setDF(bank.dt)
+head(bank.df)
+
+```
+
+
+```{r dataPartition}
+set.seed(13)
+train.index <- createDataPartition(bank.df$Personal_Loan, p = 0.6, list = FALSE)
+train.df <- bank.df[train.index, ]
+valid.df <- bank.df[-train.index, ]
+
+```
+
+__Logistic Regression__  
+```{r logisticReg}
+logit.reg <- glm(Personal_Loan ~ ., data = train.df, family = "binomial") 
+
+options(scipen=999)
+summary(logit.reg)
+
+# Generate odds-ratios
+exp(coef(logit.reg))
+```
+
+
+## Model Selection
+```{r modelSelection}
+logitnew <- stepAIC(logit.reg, trace = 0)  # trace = 0 suppress intermediate steps
+
+```
+
+
+## Performance Evaluation
+```{r perfEval}
+logit.reg.pred <- predict(logit.reg, valid.df[, -8], type = "response")
+
+t(t(head(logit.reg.pred, 10)))
+
+# generate confusion matrix
+table(valid.df$Personal_Loan , logit.reg.pred > 0.5)
+
+```
+
+
+## Lift Chart
+```{r}
+gain <- gains(valid.df$Personal_Loan, logit.reg.pred, groups = 10)
+
+  ### Plot Lift Chart
+plot(c(0,gain$cume.pct.of.total*sum(valid.df$Personal_Loan))~c(0,gain$cume.obs), 
+     xlab = "# cases", ylab = "Cumulative", main = "", type = "l")
+lines(c(0,sum(valid.df$Personal_Loan))~c(0, dim(valid.df)[1]), lty = 5)
+
+  ### Plot decile-wise chart
+heights <- gain$mean.resp/mean(valid.df$Personal_Loan)
+midpoints <- barplot(heights, names.arg = gain$depth,  ylim = c(0,9), col = "gold3",  
+                     xlab = "Percentile", ylab = "Mean Response", 
+                     main = "Decile-wise lift chart")
+
+```
+
+
+
