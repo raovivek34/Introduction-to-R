@@ -9,3 +9,5 @@ Simple R scripts that cover the basics of R and help in understanding R programm
 6. Intro_Regression - Covers the topic of regression analysis in R programming language using Toyota Corolla Prices dataset - Multiple Linear Regression and Feature Selection Techniques involving Exhaustive Search, Forward Selection, Backward Selection and Stepwise Regression.
 7. Intro_LogisticRegression - Covers the topic of classification analysis in R programming language using Logistic Regression on Universal Bank Loan Dataset
 
+Note : Each of these folders contain a .rmd (R Markdown document) which consists of the code written in R and .md (a readme file) which consists of the output - results, interpretation and explanation. 
+
